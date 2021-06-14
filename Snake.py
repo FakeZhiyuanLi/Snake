@@ -4,9 +4,9 @@ import os
 
 pygame.init()
 
-BG = pygame.image.load(os.path.join('Assets', 'Background.png'))
-Apple = pygame.image.load(os.path.join('Assets', 'Snake_Apple.png'))
-Snake_Segment = pygame.image.load(os.path.join('Assets', 'Snake_Segment.png'))
+BG = pygame.image.load(os.path.join('Snake', 'Assets', 'Background.png'))
+Apple = pygame.image.load(os.path.join('Snake', 'Assets', 'Snake_Apple.png'))
+Snake_Segment = pygame.image.load(os.path.join('Snake', 'Assets', 'Snake_Segment.png'))
 
 Apple_Coords = []
 Snake_Segments = []
