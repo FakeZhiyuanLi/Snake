@@ -1,1 +1,3 @@
 # Snake
+
+IT'S LITERALLY JUST SNAKE
