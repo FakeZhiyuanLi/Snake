@@ -10,7 +10,8 @@ Apple = pygame.image.load(os.path.join('Snake', 'Assets', 'Snake_Apple.png'))
 Snake_Segment = pygame.image.load(os.path.join('Snake', 'Assets', 'Snake_Segment.png'))
 
 Apple_Coords = []
-Snake_Segments = [[150, 450]]
+Snake_Segments = [[150, 450, 1]]
+Turning_Points = []
 player_score = 0
 
 WIDTH = 750
@@ -30,13 +31,13 @@ def GENERATE_APPLE():
 
 def MOVE(direction):
     for segment in Snake_Segments:
-        if direction == 0:
+        if segment[2] == 0:
             segment[1] -= 50
-        elif direction == 1:
+        elif segment[2] == 1:
             segment[0] += 50
-        elif direction == 2:
+        elif segment[2] == 2:
             segment[1] += 50
-        elif direction == 3:
+        elif segment[2] == 3:
             segment[0] -= 50
         else:
             print("Something went wrong")
@@ -48,14 +49,14 @@ def HANDLE_APPLE_COLLISION(direction):
             Apple_Coords.remove(apple)
             x = Snake_Segments[-1][0]
             y = Snake_Segments[-1][1]
-            if direction == 0:
-                Snake_Segments.append([x, y + 50])
-            elif direction == 1:
-                Snake_Segments.append([x - 50, y])
-            elif direction == 2:
-                Snake_Segments.append([x, y - 50])
-            elif direction == 3:
-                Snake_Segments.append([x + 50, y])
+            if Snake_Segments[0][2] == 0:
+                Snake_Segments.append([x, y - 50, 0])
+            elif Snake_Segments[0][2] == 1:
+                Snake_Segments.append([x - 50, y, 1])
+            elif Snake_Segments[0][2] == 2:
+                Snake_Segments.append([x, y + 50, 2])
+            elif Snake_Segments[0][2] == 3:
+                Snake_Segments.append([x + 50, y, 3])
             player_score += 1
             GENERATE_APPLE()
 
@@ -87,6 +88,34 @@ def DRAW_WINDOW():
 
     pygame.display.update()
 
+def set_direction(direction):
+    for segment in Snake_Segments:
+        segment[2] = direction
+
+def UP():
+    x, y = Snake_Segments[0][0], Snake_Segments[0][1]
+    Turning_Points.append([x, y, 0])
+def RIGHT():
+    x, y = Snake_Segments[0][0], Snake_Segments[0][1]
+    Turning_Points.append([x, y, 1])
+def DOWN():
+    x, y = Snake_Segments[0][0], Snake_Segments[0][1]
+    Turning_Points.append([x, y, 2])
+def LEFT():
+    x, y = Snake_Segments[0][0], Snake_Segments[0][1]
+    Turning_Points.append([x, y, 3])
+
+def HANDLE_TURNS():
+    for turn in Turning_Points:
+        for segment in Snake_Segments:
+            if Snake_Segments[-1][0] == turn[0] and Snake_Segments[-1][1] == turn[1]:
+                Snake_Segments[-1][2] = turn[2]
+                Turning_Points.pop()
+            if segment[0] == turn[0] and segment[1] == turn[1]:
+                segment[2] = turn[2]
+
+                
+
 def main():
     running = True
     direction = 1
@@ -104,23 +133,28 @@ def main():
                     print(Apple_Coords)
                     print(Snake_Segments)
                 if event.key == pygame.K_c:
-                    print(player_score)
-                if event.key == pygame.K_w:
-                    direction = 0
-                if event.key == pygame.K_d:
-                    direction = 1
-                if event.key == pygame.K_s:
-                    direction = 2
-                if event.key == pygame.K_a:
-                    direction = 3
+                    print(Turning_Points)
+                if event.key == pygame.K_w and Snake_Segments[0][2] != 2:
+                    set_direction(0)
+                    UP()
+                if event.key == pygame.K_d and Snake_Segments[0][2] != 3:
+                    set_direction(1)
+                    RIGHT()
+                if event.key == pygame.K_s and Snake_Segments[0][2] != 0:
+                    set_direction(2)
+                    DOWN()
+                if event.key == pygame.K_a and Snake_Segments[0][2] != 1:
+                    set_direction(3)
+                    LEFT()
 
                 if event.key == pygame.K_ESCAPE:
                     running = False
 
         if time % 15 == 0:
-            MOVE(direction)
+            MOVE(Snake_Segments[0][2])
         HANDLE_BOUNDARIES()
         HANDLE_APPLE_COLLISION(direction)
+        HANDLE_TURNS()
         DRAW_WINDOW()
 
 if __name__ == '__main__':
