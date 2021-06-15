@@ -39,11 +39,11 @@ def HANDLE_APPLE_COLLISION():
             x = Snake_Segments[-1][0]
             y = Snake_Segments[-1][1]
             if Snake_Segments[0][2] == 0:
-                Snake_Segments.append([x, y - 50, 0])
+                Snake_Segments.append([x, y + 50, 0])
             elif Snake_Segments[0][2] == 1:
                 Snake_Segments.append([x - 50, y, 1])
             elif Snake_Segments[0][2] == 2:
-                Snake_Segments.append([x, y + 50, 2])
+                Snake_Segments.append([x, y - 50, 2])
             elif Snake_Segments[0][2] == 3:
                 Snake_Segments.append([x + 50, y, 3])
             player_score += 1
@@ -66,9 +66,10 @@ def HANDLE_BOUNDARIES():
         elif segment[1] < 100:
             segment[1] = HEIGHT            
 
-def set_dir(dir):
-    for segment in Snake_Segments:
-        segment[2] = dir
+def set_dir(dir, can_move):
+    if can_move:
+        for segment in Snake_Segments:
+            segment[2] = dir
 
 def HANDLE_MOVEMENT():
     del Snake_Segments[-1]
@@ -100,6 +101,7 @@ def DRAW_WINDOW():
 
 
 def main():
+    can_move = True
     running = True
     direction = 1
     time = 0
@@ -116,19 +118,24 @@ def main():
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_w and Snake_Segments[0][2] != 2 or event.key == pygame.K_UP and Snake_Segments[0][2] != 2:
-                    set_dir(0)
+                    set_dir(0, can_move)
+                    can_move = False
                 if event.key == pygame.K_d and Snake_Segments[0][2] != 3 or event.key == pygame.K_RIGHT and Snake_Segments[0][2] != 3:
-                    set_dir(1)
+                    set_dir(1, can_move)
+                    can_move = False
                 if event.key == pygame.K_s and Snake_Segments[0][2] != 0 or event.key == pygame.K_DOWN and Snake_Segments[0][2] != 0:
-                    set_dir(2)
+                    set_dir(2, can_move)
+                    can_move = False
                 if event.key == pygame.K_a and Snake_Segments[0][2] != 1 or event.key == pygame.K_LEFT and Snake_Segments[0][2] != 1:
-                    set_dir(3)
+                    set_dir(3, can_move)
+                    can_move = False
 
                 if event.key == pygame.K_ESCAPE:
                     running = False
 
         if time % 15 == 0:
             HANDLE_MOVEMENT()
+            can_move = True
         if time > 60:
             HANDLE_SNAKE_COLLISION()
         HANDLE_BOUNDARIES()
