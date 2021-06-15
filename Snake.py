@@ -4,10 +4,13 @@ import os
 
 pygame.init()
 pygame.font.init()
+pygame.mixer.init()
 
 BG = pygame.image.load(os.path.join('Snake', 'Assets', 'Background.png'))
 Apple = pygame.image.load(os.path.join('Snake', 'Assets', 'Snake_Apple.png'))
 Snake_Segment = pygame.image.load(os.path.join('Snake', 'Assets', 'Snake_Segment.png'))
+
+Eat_Sound = pygame.mixer.Sound(os.path.join('Snake', 'Assets', 'Apple_Eat.mp3'))
 
 Apple_Coords = []
 Snake_Segments = [[200, 450, 1], [250, 450, 1]]
@@ -47,6 +50,7 @@ def HANDLE_APPLE_COLLISION():
             elif Snake_Segments[0][2] == 3:
                 Snake_Segments.append([x + 50, y, 3])
             player_score += 1
+            Eat_Sound.play()
             GENERATE_APPLE()
 
 def HANDLE_SNAKE_COLLISION():
