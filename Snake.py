@@ -29,9 +29,15 @@ score_font = pygame.font.SysFont('Comic Sans MS', 40)
 lose = pygame.USEREVENT + 1
 
 def GENERATE_APPLE():
-    x = random.randint(0, 14)
-    y = random.randint(2, 16)
-    Apple_Coords.append([x * 50, y * 50])
+    generated = False
+    while not generated:
+        x = random.randint(0, 14)
+        y = random.randint(2, 16)
+        for segment in Snake_Segments:
+            if segment[0] != x and segment[1] != y:
+                Apple_Coords.append([x * 50, y * 50])
+                generated = True
+                break
 
 
 def HANDLE_APPLE_COLLISION():
