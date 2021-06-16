@@ -46,6 +46,7 @@ def GENERATE_APPLE():
     Apple_Coords.append([x * 50, y * 50])
     
 def HANDLE_APPLE_COLLISION():
+    
     global player_score
     for apple in Apple_Coords:
         if Snake_Segments[0][0] == apple[0] and Snake_Segments[0][1] == apple[1]:
